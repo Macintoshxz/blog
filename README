@@ -1,0 +1,17 @@
+# install node
+wget https://nodejs.org/dist/v0.12.5/node-v0.12.5.tar.gz
+tar -xvf node-v0.12.5.tar.gz
+cd node-v0.12.5
+./configure
+make
+make install
+
+# install hexo
+npm install -g hexo-cli
+npm install hexo-deployer-git --save
+
+# ssh
+ssh-keygen -t rsa -b 4096 -C "bio.xfu@gmail.com"
+ssh-add ~/.ssh/id_rsa
+
+
