@@ -70,3 +70,7 @@ theme: landscape
 deploy: 
   type: git
   repo: git@github.com:bioxfu/bioxfu.github.io.git
+
+# Duoshuo
+duoshuo_shortname: bioxfu
+

@@ -9,6 +9,9 @@ make install
 # install hexo
 npm install -g hexo-cli
 npm install hexo-deployer-git --save
+npm install hexo-generator-feed
+npm install hexo-generator-sitemap
+
 
 # ssh
 ssh-keygen -t rsa -b 4096 -C "bio.xfu@gmail.com"
