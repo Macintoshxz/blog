@@ -42,22 +42,82 @@ NumPy MaskedArray | Like the '2D ndarray' case except masked values become NA/mi
 ---
 最常见的构建DataFrame的方式是 (1)from a dict of equal-length lists or NumPy arrays 和 (2)from a nested dict of dicts/Series
 
-### 1.3 Index Objects
 
 ## 2. Essential Functionality
 ### 2.1 Reindexing
+- A critical method on pandas objects is `reindex`, which means to create a new object with the data *conformed* to a new index, introducing missing values if any index values were not already present.
+- With DataFrame, reindex can alter either the (row) index, columns, or both. When passed just a sequence, the rows are reindexed in the result.
+- The columns can be reindexed using the **columns** keyword.
+- reindex function arguments:
+
+Argument | Description
+--- | ---
+index | New sequence to use as index. Can be Index instance or any other sequence-like Python data structure.
+method | Interpolation (fill) method. ffill (fill forward)or bfill (fillbackward)
+fill_value | Substitute value to use when introducing missing data by reindexing
+limit | When forward- or backfilling, maximum size gap to fill
+level | Match simple Index on level of MultiIndex, otherwise select subset of 
+copy | Do not copy underlying data if new index is equivalent to old index. `True` by default (i.e. always copy data)
 
 ### 2.2 Dropping entries from an axis
+- The `drop` method will return a new object with the indicated value or values deleted from an axis.
+- With DataFrame, index values can be deleted from either axis.
+---
+这个功能非常简单实用，在实践过程中，经常会出现要删除某几行或某几列的情况。这个比R中的方法要简单许多。
 
 ### 2.3 Indexing, selection, and filtering
+- Series indexing (obj[...]) works analogously to NumPy array indexing, except you can use the Series's **index values** instead of only integers.
+- **Slicing with labels** behaves differently than normal Python slicing in that the endpoint is inclusive.
+- The special indexing field **ix** enables you to select a subset of the rows and columns from a DataFrame with NumPy-like notation plus axis labels. This is also a less verbose way to to reindexing.
+- Indexing options with DataFrame
+
+Type | Notes
+--- | ---
+obj[val] | Select single column or sequence of columns from the DataFrame. Special case conveniences: boolean array (filter rows), slice (slice rows), or boolean DataFrame (set values based on some criterion).
+obj.ix[val] | Selects single row or subset of rows from the DataFrame.
+obj.ix[:, val] | Selects single column or subset of columns.
+obj.ix[val1, val2] | Select both rows and columns.
+`reindex` method | Conform one or more axes to new indexes.
+`xs` method | Select single row or column as a Series by label.
+`icol`, `irow` methods | Select single column or row, respectively, as a Series by integer location.
+`get_value`, `set_value methods` | Select single value by row and column label.
 
 ### 2.4 Arithmetic and data alignment
+- One of the most important pandas features is the behavior of arithmetic between objects with different indexes.
+- When adding together objects, if any index pairs are not the same, the respective index in the result will be the union of the index pairs.
+- The internal data alignment introduces NA values in the indices that don't overlap. Missing values propagate in arithmetic computations.
+- Using arithmetic methods (`add`, `sub`, `div`, `mul`) and *fill_value=val* argument to fill the NA with a special value.
+- By default, arithmetic between DataFrame and Series matches the index of the Series on the DataFrame's **columns**, broadcasting down the rows.
+- If you want to instead broadcast over the columns, matching on the rows, you have to use one of the arithmetic methods (`add`, `sub`, `div`, `mul`) and the *axis=0* argument.
 
 ### 2.5 Function application and mapping
+- Applying a function on 1D arrays to each column or row.
+- `apply` and `applymap` methods
+- Many of the most common array statistics (like `sum` and `mean`) are DataFrame methods, so using `apply` is not necessary.
 
 ### 2.6 Sorting and ranking
+- To sort lexicographically by row or column index, use the `sort_index` method.
+- To sort a Series by its values, use its `order` method.
+- On DataFrame, you may want to sort by the values in one or more columns. To do so, pass one or more column names to the `by` option.
+- *Ranking* is assigning ranks from one through the number of valid data points in an array. 
+- DataFrame can compute ranks over the rows or the columns.
+- Tie-breaking methods with rank
+
+Method | Description
+--- | ---
+average | Defalut: assign the average rank to each entry in the equal group.
+min | Use the minimum rank for the whole group.
+max | Use the maximum rank for the whole group.
+first| Assign ranks in the order the values appear in the data.
+---
+对DataFrame排序，尤其是按照多列排序，pandas的`sort_index`方法更方便.
 
 ### 2.7 Axis indexes with duplicate values
+- While many pandas functions (like `reindex`) require that the labels be unique, it's not mandatory.
+- Indexing a value with multiple entries returns a Series with single entries returns a scalar value.
+---
+- 这和R不同，注意区别
+
 
 ## 3. Summarizing and Computing Descriptive Statistics
 
