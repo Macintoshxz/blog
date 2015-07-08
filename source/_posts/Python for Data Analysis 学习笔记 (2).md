@@ -118,11 +118,69 @@ first| Assign ranks in the order the values appear in the data.
 ---
 - 这和R不同，注意区别
 
-
 ## 3. Summarizing and Computing Descriptive Statistics
+- pandas objects are equipped with a set of common mathematical and statistical methods. Most of these fall into the category of *reductions* or *summary statistics*, methods that extract a single value (like the sum or mean) from a Series or a Series of values from the rows or column s of a DataFrame.
+- NA values are excluded unless the entire row or column is NA. This can be disabled using the `skipna` option.
+- Options for reduction methods:
 
+Method | Description
+--- | ---
+axis | Axis to reduce over. 0 for DataFrame's rows and 1 for columns.
+skipna | Exclude missing values, `True` by default.
+level | Reduce grouped by level if the axis is hierarchically-indexed (MultiIndex).
+
+- Descriptive and summary statistics:
+
+Method | Description
+--- | ---
+count | Number of non-NA values
+describe | Compute set of summary statistic for Series or each DataFrame column
+min, max | Compute minimum and maximum values
+argmin, argmax | Compute index **location (integers)** at which minimum or maximum value obtained, respectively
+idxmin, idxmax | Compute index **value** at which minimum or maximum value obtained, respectively
+quantile | Compute sample quantile ranging from 0 to 1
+sum | Sum of values
+mean | Mean of values
+median | Arithmetic median (50% quantile) of values
+mad | Mean absolute deviation from mean value
+var | Sample variance of values
+std | Sample standard deviation of values
+skew | Sample skewness(3rd moment) of values
+kurt | Sample kurtosis(4th moment) of values
+cumsum | Cumulative sum of values
+cummin, cummax | Cumulative minimum or maximum of values, respectively
+cumprod | Cumulative product of values
+diff | Compute 1st arithmetic difference (useful for time series)
+pct_change | Compute percent changes
+
+- Unique value, value counts, and membership
+
+Method | Description
+--- | ---
+isin | Compute boolean array indicating whether each Series value is contained in the passed sequence of values.
+unique | Compute array of unique values in a Series, returned in the order observed.
+value_counts | Return a Series containing unique values as its index and frequencies as its values, ordered count in descending order.
 
 ## 4. Handling Missing Data
+- NA handling methods:
+
+Argument | Description
+--- | ---
+dropna | Filter axis labels based on whether values for each label have missing data, with varying thresholds (`thresh` argument) for how much missing data to tolerate. With DataFrame objects, dropna by default drops and row containing a missing value. Passing `how='all'` will only drop rows that are all NA. Dropping columns in the same way is only a matter of passing `axis=1`.
+fillna | Fill in missing data with some value or using an interpolation method such as `ffill` or `bfill`
+isnull | Return like-type object containing boolean values indicating which values are miising/NA.
+notnull | Negation of isnull.
+
+- fillna function arguments:
+
+Argument | Description
+--- | ---
+value | Scalar value or dict-like object to use to fill missing values
+method | Interpolation, by default 'ffill' if function called with no other arguments
+axis | Axis to fill on, default axis=0
+inplace | Modify the calling object without producing a copy
+limit | For forward and backward filling, maximum number of consecutive periods to fill
 
 ## 5. Hierarchical Indexing
-
+- *Hierarchical indexing* is an important feature of pandas enabling you to have multiple index *level* on an axis.
+- 这是一个非常强大的功能，要通过不断实践熟练掌握，可以提高操作DataFrame时的效率
